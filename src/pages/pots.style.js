@@ -23,7 +23,7 @@ export const Textarea = styled.textarea`
   border-radius: 12px;
   background-color: #ededed;
   border: none;
-  padding: 18px 0 0 17px;
+  padding: 18px 10px 0 17px;
   ::placeholder {
     font-family: "IBM Plex Sans";
     font-style: normal;

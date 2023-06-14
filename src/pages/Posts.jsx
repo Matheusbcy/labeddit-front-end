@@ -41,7 +41,8 @@ function Posts() {
         content: contentNewPost,
       };
       await axios.post("http://localhost:3003/posts", data, { headers });
-      getAllPosts()
+      setContentNewPost("");
+      getAllPosts();
     } catch (error) {
       console.log(error);
     }
@@ -58,6 +59,7 @@ function Posts() {
         <Textarea
           name="post"
           id="post"
+          value={contentNewPost}
           placeholder="Escreva seu post..."
           onChange={onChangeContent}
         ></Textarea>

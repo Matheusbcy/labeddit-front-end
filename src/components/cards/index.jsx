@@ -24,7 +24,7 @@ function Cards({ id, creatorName, content, likes, dislikes, listComments }) {
   const navigate = useNavigate();
   const numberComments = listComments.length;
   const [likeOrDislike, setLikeOrDislike] = useState(null);
-
+  
   const token = localStorage.getItem("token");
 
   const headers = {

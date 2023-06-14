@@ -55,6 +55,7 @@ function PostsComments() {
       await axios.post(`http://localhost:3003/posts/${id}/comments`, data, {
         headers,
       });
+      setNewComments("")
       getPostById();
     } catch (error) {}
   };
@@ -76,6 +77,7 @@ function PostsComments() {
         <TextareaComments
           name="postComments"
           id="postComments"
+          value={newComments}
           placeholder="Adicionar comentário"
           onChange={onChangeComments}
         ></TextareaComments>
@@ -88,6 +90,8 @@ function PostsComments() {
                 key={index}
                 name={comment.name}
                 comentario={comment.comments}
+                like={comment.like}
+                dislikes={comment.deslikes}
               />
             );
           })}
