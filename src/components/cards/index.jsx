@@ -33,7 +33,6 @@ function Cards({ id, creatorName, content, likes, dislikes, listComments }) {
   const [likeOrDislike, setLikeOrDislike] = useState(null);
   const [like, setLike] = useState(likes);
   const [dislike, setDislike] = useState(dislikes);
-  // const [likeAndDeslike, setLikeAndDeslike] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const token = localStorage.getItem("token");
