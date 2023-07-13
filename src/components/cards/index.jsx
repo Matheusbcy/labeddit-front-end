@@ -11,26 +11,35 @@ import {
   PLike,
   TitleCard,
 } from "./style";
-import like from "../../assets/like.png";
-import deslike from "../../assets/deslike.png";
+import likeImg from "../../assets/like.png";
+import deslikeImg from "../../assets/deslike.png";
 import comments from "../../assets/comments.png";
 import { goToCommentsPosts } from "../../routes/coordinator";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
+import { BASE_URL } from "../../contants/url";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 function Cards({ id, creatorName, content, likes, dislikes, listComments }) {
   const navigate = useNavigate();
   const numberComments = listComments.length;
   const [likeOrDislike, setLikeOrDislike] = useState(null);
-  
-  const token = localStorage.getItem("token");
+  const [like, setLike] = useState(likes);
+  const [dislike, setDislike] = useState(dislikes);
+  // const [likeAndDeslike, setLikeAndDeslike] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
+  const token = localStorage.getItem("token");
   const headers = {
     Authorization: token,
   };
-
   const data = {
     like: likeOrDislike,
   };
@@ -38,13 +47,13 @@ function Cards({ id, creatorName, content, likes, dislikes, listComments }) {
   const addLikeOrDislike = async () => {
     try {
       if (likeOrDislike !== null) {
-        await axios.put(`http://localhost:3003/posts/${id}/like`, data, {
+        await axios.put(`${BASE_URL}/posts/${id}/like`, data, {
           headers,
         });
       }
     } catch (error) {
       if (error.request.status === 400) {
-        alert("Você não pode curtir o proprio post.");
+        setOpenSnackbar(true);
       }
     }
   };
@@ -52,6 +61,10 @@ function Cards({ id, creatorName, content, likes, dislikes, listComments }) {
   useEffect(() => {
     addLikeOrDislike();
   }, [likeOrDislike]);
+
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
+  };
 
   return (
     <ContainerCard>
@@ -61,12 +74,12 @@ function Cards({ id, creatorName, content, likes, dislikes, listComments }) {
         <LikeDeslike>
           <ButtonImg onClick={() => setLikeOrDislike(true)}>
             {" "}
-            <ImgLikeDeslie src={like} alt="botão like" />{" "}
+            <ImgLikeDeslie src={likeImg} alt="botão like" />{" "}
           </ButtonImg>
-          <PLike>{dislikes > likes ? 0 : likes - dislikes}</PLike>
+          <PLike>{dislike > like ? 0 : like - dislike}</PLike>
           <ButtonImg onClick={() => setLikeOrDislike(false)}>
             {" "}
-            <ImgLikeDeslie src={deslike} alt="botão deslike" />{" "}
+            <ImgLikeDeslie src={deslikeImg} alt="botão deslike" />{" "}
           </ButtonImg>
         </LikeDeslike>
         <Comments>
@@ -76,11 +89,19 @@ function Cards({ id, creatorName, content, likes, dislikes, listComments }) {
             }}
           >
             {" "}
-            <img src={comments} alt=""></img>{" "}
+            <img src={comments} alt="icone comentarios"></img>{" "}
           </ButtonImg>
           <NumberComments>{numberComments}</NumberComments>
         </Comments>
       </ContainerLikeDeslie>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert severity="error">Você não pode curtir seu proprio post!</Alert>
+      </Snackbar>
     </ContainerCard>
   );
 }

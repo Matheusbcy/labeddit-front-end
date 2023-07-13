@@ -11,6 +11,7 @@ export const ContainerPostsComments = styled.div`
 
 export const ContainerCardComments = styled.div`
   margin-top: 28px;
+  overflow-y: hidden;
 `;
 
 const clickAnimation = keyframes`
@@ -23,6 +24,26 @@ const clickAnimation = keyframes`
   100% {
     transform: scale(1);
   }
+`;
+
+export const spinAnimation = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+`;
+
+export const Spinner = styled.div`
+  display: inline-block;
+  overflow-y: hidden;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  border-top-color: #000;
+  animation: ${spinAnimation} 1s infinite linear;
 `;
 
 export const ButtonComments = styled.button`
@@ -84,5 +105,5 @@ export const HrComments = styled.hr`
 `;
 
 export const ContainerComments = styled.div`
-    margin-top: 36px;
-`
+  margin-top: 36px;
+`;

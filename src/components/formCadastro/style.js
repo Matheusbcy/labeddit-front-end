@@ -17,6 +17,10 @@ export const PCadastro = styled.p`
 export const Span = styled.span`
   color: #4088cb;
   font-weight: 400;
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
 `;
 export const ContainerSendEmail = styled.div`
   margin-top: 17px;

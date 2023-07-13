@@ -1,10 +1,12 @@
 import React from "react";
+import { css } from "@emotion/react";
 import {
   ButtonComments,
   ContainerCardComments,
   ContainerComments,
   ContainerPostsComments,
   HrComments,
+  Spinner,
   TextareaComments,
 } from "./postsCommentsStyle";
 import Navbar from "../components/nav";
@@ -15,11 +17,20 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
+import { BASE_URL } from "../contants/url";
+import { BeatLoader } from "react-spinners";
+
+const override = css`
+  display: inline-block;
+  margin-left: 5px;
+`;
+
 function PostsComments() {
   useProtectedPage();
 
   const [postsById, setPostById] = useState([]);
   const [newComments, setNewComments] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { id } = useParams();
 
@@ -34,7 +45,7 @@ function PostsComments() {
 
   const getPostById = async () => {
     try {
-      const postById = await axios.get(`http://localhost:3003/posts?id=${id}`, {
+      const postById = await axios.get(`${BASE_URL}/posts?id=${id}`, {
         headers,
       });
       setPostById(postById.data);
@@ -49,15 +60,19 @@ function PostsComments() {
 
   const addComments = async () => {
     try {
+      setLoading(true);
       const data = {
         comments: newComments,
       };
-      await axios.post(`http://localhost:3003/posts/${id}/comments`, data, {
+      await axios.post(`${BASE_URL}/posts/${id}/comments`, data, {
         headers,
       });
-      setNewComments("")
+      setNewComments("");
+      setLoading(false);
       getPostById();
-    } catch (error) {}
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   if (postsById.length > 0) {
@@ -81,7 +96,20 @@ function PostsComments() {
           placeholder="Adicionar comentário"
           onChange={onChangeComments}
         ></TextareaComments>
-        <ButtonComments onClick={addComments}>Responder</ButtonComments>
+        <ButtonComments onClick={addComments}>
+          {loading ? (
+            <>
+              <BeatLoader
+                css={override}
+                size={10}
+                color={"#ffffff"}
+                loading={loading}
+              />
+            </>
+          ) : (
+            <span>Responder</span>
+          )}
+        </ButtonComments>
         <HrComments />
         <ContainerComments>
           {postsById[0].comments.map((comment, index) => {
@@ -102,7 +130,9 @@ function PostsComments() {
     return (
       <ContainerPostsComments>
         <Navbar />
-        <ContainerCardComments>Carregando ...</ContainerCardComments>
+        <ContainerCardComments>
+          <Spinner />
+        </ContainerCardComments>
         <TextareaComments
           name="postComments"
           id="postComments"
@@ -111,8 +141,6 @@ function PostsComments() {
         <ButtonComments>Responder</ButtonComments>
         <HrComments />
         <ContainerComments>
-          <CardsComments />
-          <CardsComments />
         </ContainerComments>
       </ContainerPostsComments>
     );

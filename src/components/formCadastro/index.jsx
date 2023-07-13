@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { css } from "@emotion/react";
 import {
   ContainerCadastrarButton,
   ContainerFormCadastro,
@@ -14,13 +15,24 @@ import { ButtonContinue, Input } from "../form/style";
 import axios from "axios";
 import { gotoPosts } from "../../routes/coordinator";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../../contants/url";
+import { BeatLoader } from "react-spinners";
+import Snackbar from "@mui/material/Snackbar";
+import SnackbarContent from "@mui/material/SnackbarContent";
+
+const override = css`
+  display: inline-block;
+  margin-left: 5px;
+`;
 
 function FormCadastro() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  
+  const [loading, setLoading] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
   const navigate = useNavigate();
 
   const onChangeName = (event) => {
@@ -50,20 +62,27 @@ function FormCadastro() {
       alert("A senha não atende aos requisitos.");
       return;
     } else {
+      setLoading(true);
       try {
-        const result = await axios.post("http://localhost:3003/users/signup", {
+        const result = await axios.post(`${BASE_URL}/users/signup`, {
           name: name,
           email: email,
           password: password,
         });
         const token = result.data.token;
         localStorage.setItem("token", token);
-        alert("cadastro realizado com sucesso.");
-        gotoPosts(navigate);
+        setOpenSnackbar(true);
+        setTimeout(() => {
+          gotoPosts(navigate);
+        }, 2000);
       } catch (error) {
         console.log(error);
       }
     }
+  };
+
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
   };
 
   return (
@@ -107,7 +126,31 @@ function FormCadastro() {
         </PCheckBox>
       </ContainerSendEmail>
       <ContainerCadastrarButton>
-        <ButtonContinue>Cadastrar</ButtonContinue>
+        <ButtonContinue>
+          {loading ? (
+            <>
+              <BeatLoader
+                css={override}
+                size={10}
+                color={"#ffffff"}
+                loading={loading}
+              />
+            </>
+          ) : (
+            <span>Cadastrar</span>
+          )}
+        </ButtonContinue>
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={3000}
+          onClose={handleSnackbarClose}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <SnackbarContent
+            style={{ backgroundColor: "#4caf50" }}
+            message="Cadastro realizado com sucesso."
+          />
+        </Snackbar>
       </ContainerCadastrarButton>
     </ContainerFormCadastro>
   );

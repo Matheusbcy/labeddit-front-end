@@ -51,7 +51,7 @@ const clickAnimation = keyframes`
 export const ButtonContinue = styled.button`
   width: 365px;
   font-family: "Noto Sans";
-  height: 51px;
+  height: 56px;
   border-radius: 27px;
   padding: 13px 133px;
   border: none;

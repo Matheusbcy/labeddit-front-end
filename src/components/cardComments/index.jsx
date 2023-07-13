@@ -14,11 +14,11 @@ import imgLike from "../../assets/like.png";
 import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
+import { BASE_URL } from "../../contants/url";
 
 function CardsComments({ name, comentario, like, dislikes }) {
   const [likeOrDislike, setLikeOrDislike] = useState(null);
 
-  
   const token = localStorage.getItem("token");
   const headers = {
     Authorization: token,
@@ -30,16 +30,19 @@ function CardsComments({ name, comentario, like, dislikes }) {
         comment: comentario,
         like: likeOrDislike,
       };
-      await axios.put("http://localhost:3003/posts/comments/likes", data, {
+      await axios.put(`${BASE_URL}/posts/comments/likes`, data, {
         headers,
       });
+      addLikeComments();
     } catch (error) {
-      // console.log(error.message);
+      console.log(error.message);
     }
   };
 
   useEffect(() => {
-    addLikeComments();
+    if (likeOrDislike !== null) {
+      addLikeComments();
+    }
   }, [likeOrDislike]);
 
   return (

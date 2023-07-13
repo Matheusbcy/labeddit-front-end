@@ -5,8 +5,10 @@ import lab2 from "../assets/Vector (1).png";
 import lab3 from "../assets/Vector (2).png";
 import lab4 from "../assets/Vector (3).png";
 import Form from "../components/form";
+import SendPost from "../sendPost"
 
 function Home() {
+  SendPost()
   return (
     <ContainerHome>
       <Column>
