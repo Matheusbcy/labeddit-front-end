@@ -63,4 +63,6 @@ O Deploy pode ser acessado [Clicando aqui](https://mf-labeddit.surge.sh/)
 
 Matheus Freitas - GitHub: [Matheus Freitas](https://github.com/Matheusbcy)
 
+Criando pull para correção 
+
 

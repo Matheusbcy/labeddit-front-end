@@ -25,7 +25,6 @@ function Posts() {
   const [allPosts, setALlPosts] = useState([]);
   const [contentNewPost, setContentNewPost] = useState("");
   const [loading, setLoading] = useState(false);
-
   const token = localStorage.getItem("token");
   const headers = {
     Authorization: token,
